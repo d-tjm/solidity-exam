@@ -24,7 +24,7 @@ contract ERC1155Token is ERC1155, Ownable {
     }
 
     function mintBatch(string memory _uri, uint8 _amount) public onlyOwner {
-        require(tokenId < 100, "Limit");
+        require(tokenId < 100, "Limit exceed");
 
         for (uint256 i; i < _amount; i++) {
             _mint(treasury, tokenId, 1, "");
@@ -35,7 +35,7 @@ contract ERC1155Token is ERC1155, Ownable {
     }
 
     function mint(string memory _uri) public onlyOwner {
-        require(tokenId < 100, "Limit");
+        require(tokenId < 100, "Limit exceed");
 
         _mint(treasury, tokenId, 1, "");
         tokens[tokenId] = Token({id: tokenId + 1, uri: _uri});
