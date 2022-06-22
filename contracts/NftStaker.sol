@@ -4,6 +4,18 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
 contract NftStaker {
+    event Staked(
+        address indexed staker,
+        uint256 indexed tokenId,
+        uint256 amount
+    );
+    event Unstaked(
+        address indexed staker,
+        uint256 indexed tokenId,
+        uint256 amount,
+        uint256 reward
+    );
+
     ERC1155 parentNft;
     uint256 duration;
 
@@ -22,7 +34,7 @@ contract NftStaker {
     }
 
     function stake(uint256 _tokenId, uint8 _amount) public {
-        // require(stakes[msg.sender].amount != 0, "Not allowed");
+        require(stakes[msg.sender].amount == 0, "Not allowed");
 
         stakes[msg.sender] = Stake({
             tokenId: _tokenId,
@@ -38,6 +50,8 @@ contract NftStaker {
             _amount,
             "0x00"
         );
+
+        emit Staked(msg.sender, _tokenId, _amount);
     }
 
     function unstake() public {
@@ -61,6 +75,8 @@ contract NftStaker {
             "0x00"
         );
         payable(msg.sender).transfer(reward);
+
+        emit Unstaked(msg.sender, userStake.tokenId, userStake.amount, reward);
     }
 
     function _computeReward(Stake memory _userStake)
