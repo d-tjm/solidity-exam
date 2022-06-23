@@ -23,6 +23,18 @@ async function main() {
 
     console.log("Calling setApprovalForAll in ERC1155Token contract");
     erc1155Token.setApprovalForAll(nftStaker.address, true);
+
+    console.log("Verifying ERC1155Token contract:",erc1155Token.address);
+    await hre.run("verify:verify", {
+      address: erc1155Token.address,
+      constructorArguments: [deployer.address]
+    });
+
+    console.log("Verifying NftStaker contract:",nftStaker.address);
+    await hre.run("verify:verify", {
+      address: nftStaker.address,
+      constructorArguments: [erc1155Token.address,60]
+    });
 }
 
 main()
